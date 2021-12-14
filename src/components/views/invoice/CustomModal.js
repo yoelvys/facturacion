@@ -10,6 +10,7 @@ import {
 } from "reactstrap";
 import "./CustomModalStyles.css";
 import { getSubProductByProductName } from "../../../api";
+import { round } from "../../../utils";
 
 export const CustomModal = ({ isOpen, setIsOpen, newDetail, addDetail }) => {
   const defaultDetail = {
@@ -53,7 +54,7 @@ export const CustomModal = ({ isOpen, setIsOpen, newDetail, addDetail }) => {
   const changeAmount = (e)=> {
     const { value } = e.target;
     const subTotal = detail.unitPrice * value;
-    detail.subTotal = subTotal;
+    detail.subTotal = round(subTotal);
     detail.amount = value;
     setDetail({ ...detail });
   }
@@ -73,7 +74,7 @@ export const CustomModal = ({ isOpen, setIsOpen, newDetail, addDetail }) => {
       }
     }
 
-    detail.subTotal = subTotal;
+    detail.subTotal = round(subTotal);
     detail.productId = productId;
     detail.subProductName = subProductName;
     detail.unitPrice = unitPrice;

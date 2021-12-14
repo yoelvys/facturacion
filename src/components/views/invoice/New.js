@@ -1,6 +1,8 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button, Form, Label, Input, Row, Col } from "reactstrap";
 import { saveInvoice } from "../../../api";
+import { round } from "../../../utils";
 import { CustomModal } from "./CustomModal";
 import "./NewStyles.css";
 
@@ -30,6 +32,8 @@ export const New = () => {
 
   const [isOpen, setIsOpen] = useState(false);
 
+  const navigate = useNavigate();
+
   const newDatil = (e) => {
     e.preventDefault();
     setIsOpen(!isOpen);
@@ -40,8 +44,11 @@ export const New = () => {
     details.forEach((d) => (subTotal += d.subTotal));
 
     subTotal += detail.subTotal;
-    const iva12 = subTotal * 0.12;
-    const total = subTotal + iva12;
+    let iva12 = subTotal * 0.12;
+    let total = subTotal + iva12;
+    subTotal = round(subTotal)
+    iva12 = round(iva12)
+    total = round(total)
 
     setTotals({
       subTotal,
@@ -70,6 +77,9 @@ export const New = () => {
     };
 
     const newInvoice = await saveInvoice(invoiceToSave);
+    if(newInvoice.id){
+      navigate(`/invoices/${newInvoice.id}` , {replace: true})
+    }
     console.log(newInvoice);
 
   };
