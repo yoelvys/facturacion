@@ -1,0 +1,40 @@
+.invoice-form{
+    border-color:cadetblue;
+    border-style: solid;
+    margin: 50px;
+    padding: 10px;
+}
+
+.save-button, .new-detail{
+    width:100%;
+    margin-top: 20px;
+}
+
+.row {
+    margin-bottom: 10px;
+}
+
+.text-right{
+    text-align: right;
+}
+
+.total{
+    font-size:30px;
+    color: brown;
+}
+
+.product-table{
+    margin: 50px;
+    width:90%!important;
+}
+.text-left{
+    text-align: left;
+}
+
+.row Label {
+    font-weight: bold;
+}
+
+.data{
+    margin-left: 30px!important;
+}
