@@ -1,25 +1,58 @@
-import { useFetchAllInvoice } from "../../../hooks";
-import { CustomSpinner } from "../../common/CustomSpinner";
 import { formatDate } from "../../../utils";
 import { DATE_FORMAT } from "../../../consts";
 import { useNavigate, Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { getAllInvoice, getByInvoiceNumber } from "../../../api";
+import { Col, Row } from "reactstrap";
 
 export const List = () => {
-  const { data: invoices, loading } = useFetchAllInvoice();
-
   const navigate = useNavigate();
 
   const handleInvoiceNew = () => {
     navigate("/invoices/new");
   };
 
-  return (
-    <div>
-      <button className="btn btn-primary" onClick={handleInvoiceNew}>
-        New Invoice
-      </button>
+  const [invoices, setInvoices] = useState([]);
 
-      {loading && <CustomSpinner />}
+  const [search, setSearch] = useState("");
+
+  const handleChange = (e) => setSearch(e.target.value);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    let invoices;
+    if (search.trim().length > 0) {
+      invoices = await getByInvoiceNumber(search);
+    } else {
+      invoices = await getAllInvoice();
+    }
+    setInvoices(invoices);
+  };
+
+  useEffect(() => {
+    getAllInvoice().then((inv) => setInvoices(inv));
+  }, []);
+
+  return (
+    <Row style={{ marginTop: "50px" }}>
+      <Row>
+        <Col>
+          <form onSubmit={handleSubmit}>
+            <input
+              type="text"
+              value={search}
+              size="60"
+              onChange={handleChange}
+              placeholder="Find invoice by number"
+            />
+          </form>
+        </Col>
+        <Col md={2}>
+          <button className="btn btn-primary" onClick={handleInvoiceNew}>
+            New Invoice
+          </button>
+        </Col>
+      </Row>
 
       <table className="table">
         <thead>
@@ -50,11 +83,7 @@ export const List = () => {
                 <td>{invoice.total}</td>
                 <td>
                   <Link to={`/invoices/${invoice.id}`}>
-                    <button
-                      className="btn btn-primary"
-                    >
-                      Detail
-                    </button>
+                    <button className="btn btn-primary">Detail</button>
                   </Link>
                 </td>
               </tr>
@@ -62,6 +91,6 @@ export const List = () => {
           })}
         </tbody>
       </table>
-    </div>
+    </Row>
   );
 };
